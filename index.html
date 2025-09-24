@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mechanic Saint Augustine – Mobile Mechanic & On-Site Auto Repair</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --brand: #0d6efd;
+      --brand-dark: #0b5ed7;
+      --surface: #f5f7fb;
+      --text: #1f2933;
+      --muted: #6c7a89;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--surface);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    header {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .nav {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--brand);
+      text-decoration: none;
+    }
+    .nav-actions a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      background: var(--brand);
+      color: white;
+    }
+    main { padding: 24px 18px 72px; }
+    .shell {
+      max-width: 1040px;
+      margin: 0 auto;
+      display: grid;
+      gap: 36px;
+    }
+    .hero {
+      display: grid;
+      gap: 24px;
+      align-items: center;
+    }
+    .hero h1 {
+      font-size: clamp(2.1rem, 4vw, 3rem);
+      margin: 0;
+    }
+    .hero > p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin: 0;
+    }
+    .hero-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px 32px;
+      box-shadow: 0 16px 30px -24px rgba(15, 23, 42, .35);
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .cta-row a {
+      display: inline-block;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 12px;
+      padding: 12px 20px;
+    }
+    .cta-primary {
+      background: var(--brand);
+      color: white;
+    }
+    .cta-secondary {
+      background: #e6f0ff;
+      color: var(--brand);
+    }
+    .features {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .feature {
+      background: white;
+      border-radius: 14px;
+      padding: 20px 24px;
+      border: 1px solid #e1e8f5;
+    }
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+    }
+    section {
+      background: white;
+      border-radius: 18px;
+      padding: 28px 32px;
+      box-shadow: 0 10px 24px -22px rgba(15, 23, 42, .45);
+    }
+    section h2 {
+      margin-top: 0;
+      font-size: 1.75rem;
+    }
+    form {
+      display: grid;
+      gap: 16px;
+    }
+    label {
+      display: grid;
+      gap: 6px;
+      font-weight: 600;
+      color: #344050;
+      font-size: 0.95rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d4dbe8;
+      border-radius: 10px;
+      font-size: 1rem;
+      background: #fbfdff;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    .checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-weight: 500;
+      color: #364152;
+      font-size: 0.98rem;
+    }
+    .checkbox input {
+      width: auto;
+      margin-top: 4px;
+      accent-color: var(--brand);
+    }
+    button[type="submit"] {
+      justify-self: start;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      background: var(--brand);
+      color: white;
+      cursor: pointer;
+    }
+    button[type="submit"]:hover { background: var(--brand-dark); }
+    .status {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #16a249;
+    }
+    .status.error { color: #d62d4e; }
+    .grid-two {
+      display: grid;
+      gap: 32px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    footer {
+      background: white;
+      border-top: 1px solid #e4eaf5;
+      margin-top: 72px;
+    }
+    footer .shell {
+      grid-template-columns: 1fr;
+      padding: 26px 18px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a class="brand" href="/">Mechanic Saint Augustine</a>
+      <div class="nav-actions">
+        <a href="tel:+19042175152">Call (904) 217-5152</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="shell">
+      <div class="hero">
+        <div class="hero-card">
+          <h1>Trusted mobile mechanic serving St. Augustine</h1>
+          <p>We come to your home or job site for diagnostics, repairs, and maintenance. Licensed, insured, and ready the same day.</p>
+          <div class="cta-row">
+            <a class="cta-primary" href="tel:+19042175152">Call or text (904) 217-5152</a>
+            <a class="cta-secondary" href="#instant-quote">Request an instant quote</a>
+          </div>
+        </div>
+        <div class="features">
+          <article class="feature">
+            <h3>On-site repairs</h3>
+            <p>Starters, alternators, brakes, batteries, oil changes, and more—performed wherever your vehicle is parked.</p>
+          </article>
+          <article class="feature">
+            <h3>Fair, transparent pricing</h3>
+            <p>We use industry labor times and parts pricing so you know the price before work begins.</p>
+          </article>
+          <article class="feature">
+            <h3>Licensed & insured</h3>
+            <p>ASE-certified technician with full liability insurance covering every job we take on.</p>
+          </article>
+          <article class="feature">
+            <h3>Fast communication</h3>
+            <p>Pick your channel—phone, text, or email. We send confirmed quotes and updates in minutes.</p>
+          </article>
+        </div>
+      </div>
+
+      <section id="instant-quote">
+        <h2>Get your estimate by text</h2>
+        <p style="color:#4a5568;margin:0 0 20px;">Fill in the vehicle details and repair you need. We’ll text and email the quote right away—no obligation.</p>
+        <form id="quoteForm">
+          <div class="grid-two">
+            <label>Full Name
+              <input name="name" placeholder="Jane Smith" required>
+            </label>
+            <label>Phone Number
+              <input name="phone" placeholder="+1 904 555 1234" required>
+            </label>
+          </div>
+          <div class="grid-two">
+            <label>Email
+              <input type="email" name="email" placeholder="you@example.com" required>
+            </label>
+            <label>ZIP Code (optional)
+              <input name="zip" placeholder="32084">
+            </label>
+          </div>
+          <div class="grid-two">
+            <label>Vehicle Year
+              <input name="year" placeholder="2014" required>
+            </label>
+            <label>Make
+              <input name="make" placeholder="Ford" required>
+            </label>
+          </div>
+          <div class="grid-two">
+            <label>Model
+              <input name="model" placeholder="F-150" required>
+            </label>
+            <label>Engine/Trim
+              <input name="engine" placeholder="3.5L EcoBoost" required>
+            </label>
+          </div>
+          <label>Repair Needed
+            <select name="repair" required>
+              <option value="">Select repair type</option>
+              <option>Oil Change</option>
+              <option>Brake Pads</option>
+              <option>Battery Replacement</option>
+              <option>Alternator</option>
+              <option>Starter</option>
+              <option>Timing Belt</option>
+              <option>AC Recharge</option>
+              <option>Check Engine</option>
+            </select>
+          </label>
+          <label>Preferred time slot
+            <select name="preferred_slot" id="preferredSlot" required>
+              <option value="">Select a date & time</option>
+            </select>
+          </label>
+          <label>Notes for the mechanic (optional)
+            <textarea name="notes" placeholder="Describe symptoms, codes, or other details we should know."></textarea>
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" name="text_opt_in" id="textOptIn">
+            <span>I agree to receive a one-time text message with my estimate. Reply STOP to opt out.</span>
+          </label>
+          <button type="submit">Send my quote</button>
+          <div id="quoteStatus" class="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <div class="grid-two">
+        <section>
+          <h2>How mobile service works</h2>
+          <ol style="padding-left:20px;color:#4a5568;">
+            <li style="margin-bottom:8px;">Tell us about your vehicle and repair needs.</li>
+            <li style="margin-bottom:8px;">We text and email a firm quote with available time slots.</li>
+            <li style="margin-bottom:8px;">We come to your location, deliver the repair, and take payment on-site.</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Contact & hours</h2>
+          <p style="color:#4a5568;">Phone & text: <a href="tel:+19042175152">(904) 217-5152</a><br>
+             Email: <a href="mailto:sodjacksonville@gmail.com">sodjacksonville@gmail.com</a></p>
+          <p style="color:#4a5568;">Hours: Monday–Saturday, 7:00am – 7:00pm<br>
+             Emergency service available after hours when techs are on call.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="shell">
+      &copy; 2024 Mechanic Saint Augustine. Licensed & insured mobile mechanic serving St. Augustine, St. Johns County, and surrounding areas.
+    </div>
+  </footer>
+
+  <script>
+    const quoteForm = document.getElementById('quoteForm');
+    const statusNode = document.getElementById('quoteStatus');
+    const preferredSlot = document.getElementById('preferredSlot');
+
+    function formatSlot(date) {
+      return date.toLocaleString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    }
+
+    function generateSlots() {
+      const slotsPerDay = [9, 13, 16]; // local hours in 24h format
+      const daysAhead = 7;
+      const now = new Date();
+      preferredSlot.innerHTML = '<option value="">Select a date & time</option>';
+
+      for (let day = 0; day < daysAhead; day++) {
+        const base = new Date(now);
+        base.setDate(now.getDate() + day);
+        const weekday = base.getDay();
+        if (weekday === 0) continue; // skip Sundays
+
+        slotsPerDay.forEach(hour => {
+          const slot = new Date(base);
+          slot.setHours(hour, 0, 0, 0);
+          if (slot <= now) return; // skip past times for today
+          const value = slot.toISOString();
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = formatSlot(slot);
+          preferredSlot.appendChild(option);
+        });
+      }
+    }
+
+    generateSlots();
+
+    function renderStatus(message, type = 'ok') {
+      statusNode.textContent = message;
+      statusNode.classList.toggle('error', type === 'error');
+    }
+
+    function friendlySmsReason(reason) {
+      if (!reason) return '';
+      const map = {
+        twilio_config_missing: 'SMS configuration is incomplete',
+        invalid_destination: 'the phone number looks invalid',
+        twilio_from_missing: 'no Twilio sender is configured'
+      };
+      if (map[reason]) return map[reason];
+      if (reason.startsWith('twilio_http_')) return 'Twilio returned an error';
+      return reason;
+    }
+
+    quoteForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      renderStatus('Submitting...');
+      const formData = new FormData(quoteForm);
+      const payload = Object.fromEntries(formData.entries());
+      payload.text_opt_in = quoteForm.text_opt_in.checked;
+
+      try {
+        const response = await fetch('/quote/quote_intake_handler.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+          renderStatus(data.error || 'Unable to submit your quote right now.', 'error');
+          return;
+        }
+
+        const estimate = data.data?.estimate;
+        let amount = null;
+        if (estimate && typeof estimate === 'object') {
+          if (typeof estimate.amount === 'number') {
+            amount = estimate.amount;
+          } else if (estimate.candidates) {
+            if (estimate.candidates.remote?.amount) amount = estimate.candidates.remote.amount;
+            else if (estimate.candidates.local?.amount) amount = estimate.candidates.local.amount;
+          }
+        }
+
+        const smsStatus = data.data?.sms?.status;
+        const smsReason = friendlySmsReason(data.data?.sms?.reason);
+        let message = amount ? `Estimated price: $${amount}` : 'Thanks! We will follow up with your quote.';
+        if (smsStatus === 'sent') {
+          message += ' We just texted you the details.';
+        } else if (smsStatus === 'error' && payload.text_opt_in) {
+          message += ` (We couldn’t send the text${smsReason ? ': ' + smsReason : ''}.)`;
+        }
+        if (payload.preferred_slot) {
+          try {
+            const slotLabel = formatSlot(new Date(payload.preferred_slot));
+            if (slotLabel) message += ` Preferred time: ${slotLabel}.`;
+          } catch (_) {
+            // ignore formatting errors
+          }
+        }
+        renderStatus(message);
+        quoteForm.reset();
+      } catch (err) {
+        renderStatus('Network error. Please call or text us directly.', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

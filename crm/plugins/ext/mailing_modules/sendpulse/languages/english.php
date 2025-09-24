@@ -1,0 +1,4 @@
+<?php
+
+define('TEXT_MODULE_SENDPULSE_USER_ID','API ID');
+define('TEXT_MODULE_SENDPULSE_SECRET','API secret');

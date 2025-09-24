@@ -1,0 +1,7 @@
+<?php
+
+define('TEXT_MODULE_SMSGATEWAY24_TOKEN','Token');
+define('TEXT_MODULE_SMSGATEWAY24_DEVICE_ID','Device ID');
+define('TEXT_MODULE_SMSGATEWAY24_SIM','SIM #');
+
+

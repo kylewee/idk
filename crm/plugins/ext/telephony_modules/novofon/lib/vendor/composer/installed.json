@@ -1,0 +1,57 @@
+{
+    "packages": [
+        {
+            "name": "novofon/user-api-v1",
+            "version": "v2.0.2",
+            "version_normalized": "2.0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/novofon/user-api-v1.git",
+                "reference": "55fcab9f889eca50d1c3de1473d30cbf52640b81"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/novofon/user-api-v1/zipball/55fcab9f889eca50d1c3de1473d30cbf52640b81",
+                "reference": "55fcab9f889eca50d1c3de1473d30cbf52640b81",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.5.0"
+            },
+            "time": "2024-07-19T09:02:03+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Novofon_API\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Novofon",
+                    "email": "manage@novofon.ru"
+                }
+            ],
+            "description": "PHP class for Novofon API",
+            "homepage": "https://github.com/novofon/user-api-v1",
+            "keywords": [
+                "api",
+                "free calls",
+                "novofon",
+                "pbx",
+                "sip"
+            ],
+            "support": {
+                "source": "https://github.com/novofon/user-api-v1/tree/v2.0.2"
+            },
+            "install-path": "../novofon/user-api-v1"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

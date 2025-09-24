@@ -1,0 +1,68 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "0cb3eb25ae35d172c4f0455d543c397b",
+    "packages": [
+        {
+            "name": "zadarma/user-api-v1",
+            "version": "v1.1.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zadarma/user-api-v1.git",
+                "reference": "bfdb7550b8f17e49b2928a84bfa0ec8587838806"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zadarma/user-api-v1/zipball/bfdb7550b8f17e49b2928a84bfa0ec8587838806",
+                "reference": "bfdb7550b8f17e49b2928a84bfa0ec8587838806",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zadarma_API\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Zadarma",
+                    "email": "github@zadarma.com"
+                }
+            ],
+            "description": "PHP class for Zadarma API",
+            "homepage": "https://github.com/zadarma/user-api-v1",
+            "keywords": [
+                "api",
+                "free calls",
+                "pbx",
+                "sip",
+                "zadarma"
+            ],
+            "support": {
+                "issues": "https://github.com/zadarma/user-api-v1/issues",
+                "source": "https://github.com/zadarma/user-api-v1/tree/v1.1.9"
+            },
+            "time": "2023-01-17T09:52:53+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.0.0"
+}

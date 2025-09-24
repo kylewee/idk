@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get a Price Quote</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f7f7f7; }
+    .container { max-width: 480px; margin: 40px auto; background:#fff; padding: 24px; border-radius: 8px; box-shadow: 0 2px 8px #0001; }
+    input, select, button { width: 100%; margin-bottom: 12px; padding: 10px; border:1px solid #ccc; border-radius: 6px; }
+    button { background:#0d6efd; color:#fff; cursor:pointer; }
+    .result { margin-top: 12px; font-weight: bold; color:#2e7d32; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Get Your Price Quote</h2>
+    <form id="quoteForm">
+      <input name="name" type="text" placeholder="Your Name" required />
+      <input name="phone" type="text" placeholder="Phone" required />
+      <input name="email" type="email" placeholder="Email" required />
+      <input name="year" type="text" placeholder="Year" required />
+      <input name="make" type="text" placeholder="Make" required />
+      <input name="model" type="text" placeholder="Model" required />
+      <input name="engine" type="text" placeholder="Engine Size" required />
+      <label for="repair">Repair Type</label>
+      <select id="repair" name="repair" required>
+        <option value="">Select Repair</option>
+        <option>Oil Change</option>
+        <option>Brake Pads</option>
+        <option>Battery Replacement</option>
+        <option>Alternator</option>
+        <option>Starter</option>
+        <option>Timing Belt</option>
+        <option>AC Recharge</option>
+        <option>Check Engine</option>
+      </select>
+      <label style="display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+        <input type="checkbox" id="text_opt_in" name="text_opt_in" value="1" style="width:auto;" />
+        Text me my estimate (one-time SMS)
+      </label>
+      <p style="margin-top:-6px; font-size:0.85rem; color:#555;">
+        We’ll only send a single follow-up with your pricing details.
+      </p>
+      <button type="submit">Get Quote</button>
+    </form>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    const prices = {
+      'Oil Change': 50,
+      'Brake Pads': 150,
+      'Battery Replacement': 120,
+      'Alternator': 350,
+      'Starter': 350,
+      'Timing Belt': 500,
+      'AC Recharge': 180,
+      'Check Engine': 80,
+    };
+
+    document.getElementById('quoteForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const payload = Object.fromEntries(form.entries());
+      payload.text_opt_in = document.getElementById('text_opt_in').checked;
+      document.getElementById('result').textContent = 'Submitting...';
+      try {
+        const resp = await fetch('quote_intake_handler.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await resp.json();
+        if (data.success) {
+          const estimate = data.data?.estimate;
+          let estimateNumber = null;
+          if (estimate && typeof estimate === 'object') {
+            if (typeof estimate.amount === 'number') {
+              estimateNumber = estimate.amount;
+            } else if (estimate.candidates) {
+              const remote = estimate.candidates.remote;
+              const local = estimate.candidates.local;
+              if (remote && typeof remote.amount === 'number') {
+                estimateNumber = remote.amount;
+              } else if (local && typeof local.amount === 'number') {
+                estimateNumber = local.amount;
+              }
+            }
+          } else if (typeof estimate === 'number') {
+            estimateNumber = estimate;
+          }
+          const smsStatus = data.data?.sms?.status;
+          const optedIn = Boolean(data.data?.text_opt_in);
+          const smsReason = data.data?.sms?.reason;
+          let friendlySmsReason = '';
+          if (typeof smsReason === 'string') {
+            if (smsReason === 'twilio_config_missing') {
+              friendlySmsReason = 'SMS configuration is incomplete';
+            } else if (smsReason === 'invalid_destination') {
+              friendlySmsReason = 'the phone number looks invalid';
+            } else if (smsReason === 'twilio_from_missing') {
+              friendlySmsReason = 'no Twilio “from” number is set';
+            } else if (smsReason && smsReason.startsWith('twilio_http_')) {
+              friendlySmsReason = 'Twilio returned an error';
+            } else {
+              friendlySmsReason = smsReason;
+            }
+          }
+          const smsMessage = smsStatus === 'sent'
+            ? ' Price text on the way.'
+            : smsStatus === 'error' && optedIn
+              ? ' (We could not send a text message this time' + (friendlySmsReason ? `: ${friendlySmsReason}` : '') + '.)'
+              : '';
+          const estimateText = estimateNumber !== null
+            ? `Estimated Price: $${estimateNumber}`
+            : 'Request received! We will follow up shortly.';
+          document.getElementById('result').textContent = estimateText + smsMessage;
+        } else if (data.error) {
+          document.getElementById('result').textContent = 'Error: ' + data.error;
+        } else if (data.errors) {
+          document.getElementById('result').textContent = Object.values(data.errors).join(' | ');
+        } else {
+          document.getElementById('result').textContent = 'Unexpected response. Please try again.';
+        }
+      } catch (err) {
+        document.getElementById('result').textContent = 'Server error. Please try again.';
+      }
+    });
+  </script>
+</body>
+</html>

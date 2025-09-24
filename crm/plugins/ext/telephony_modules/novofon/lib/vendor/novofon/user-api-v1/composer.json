@@ -1,0 +1,29 @@
+{
+  "name": "novofon/user-api-v1",
+  "description": "PHP class for Novofon API",
+  "keywords": [
+    "novofon",
+    "api",
+    "sip",
+    "pbx",
+    "free calls"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/novofon/user-api-v1",
+  "authors": [
+    {
+      "name": "Novofon",
+      "email": "manage@novofon.ru"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Novofon_API\\": "lib/"
+    }
+  },
+  "require": {
+    "php": ">=5.5.0",
+    "ext-curl": "*"
+  }
+}
