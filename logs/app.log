@@ -1,0 +1,26 @@
+[24-Sep-2025 03:06:59 America/New_York] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/runner/work/idk/idk/test_quote_system.php:24) in /home/runner/work/idk/idk/quote/quote_intake_handler.php on line 7
+[24-Sep-2025 03:06:59 America/New_York] PHP Stack trace:
+[24-Sep-2025 03:06:59 America/New_York] PHP   1. {main}() /home/runner/work/idk/idk/test_quote_system.php:0
+[24-Sep-2025 03:06:59 America/New_York] PHP   2. require_once() /home/runner/work/idk/idk/test_quote_system.php:42
+[24-Sep-2025 03:06:59 America/New_York] PHP   3. header($header = 'Content-Type: application/json') /home/runner/work/idk/idk/quote/quote_intake_handler.php:7
+[24-Sep-2025 03:06:59 America/New_York] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/runner/work/idk/idk/test_quote_system.php:24) in /home/runner/work/idk/idk/quote/quote_intake_handler.php on line 8
+[24-Sep-2025 03:06:59 America/New_York] PHP Stack trace:
+[24-Sep-2025 03:06:59 America/New_York] PHP   1. {main}() /home/runner/work/idk/idk/test_quote_system.php:0
+[24-Sep-2025 03:06:59 America/New_York] PHP   2. require_once() /home/runner/work/idk/idk/test_quote_system.php:42
+[24-Sep-2025 03:06:59 America/New_York] PHP   3. header($header = 'Access-Control-Allow-Origin: *') /home/runner/work/idk/idk/quote/quote_intake_handler.php:8
+[24-Sep-2025 03:06:59 America/New_York] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/runner/work/idk/idk/test_quote_system.php:24) in /home/runner/work/idk/idk/quote/quote_intake_handler.php on line 9
+[24-Sep-2025 03:06:59 America/New_York] PHP Stack trace:
+[24-Sep-2025 03:06:59 America/New_York] PHP   1. {main}() /home/runner/work/idk/idk/test_quote_system.php:0
+[24-Sep-2025 03:06:59 America/New_York] PHP   2. require_once() /home/runner/work/idk/idk/test_quote_system.php:42
+[24-Sep-2025 03:06:59 America/New_York] PHP   3. header($header = 'Access-Control-Allow-Methods: POST') /home/runner/work/idk/idk/quote/quote_intake_handler.php:9
+[24-Sep-2025 03:06:59 America/New_York] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/runner/work/idk/idk/test_quote_system.php:24) in /home/runner/work/idk/idk/quote/quote_intake_handler.php on line 10
+[24-Sep-2025 03:06:59 America/New_York] PHP Stack trace:
+[24-Sep-2025 03:06:59 America/New_York] PHP   1. {main}() /home/runner/work/idk/idk/test_quote_system.php:0
+[24-Sep-2025 03:06:59 America/New_York] PHP   2. require_once() /home/runner/work/idk/idk/test_quote_system.php:42
+[24-Sep-2025 03:06:59 America/New_York] PHP   3. header($header = 'Access-Control-Allow-Headers: Content-Type') /home/runner/work/idk/idk/quote/quote_intake_handler.php:10
+[24-Sep-2025 03:06:59 America/New_York] Quote intake error: Invalid preferred time format
+[24-Sep-2025 03:06:59 America/New_York] PHP Warning:  http_response_code(): Cannot set response code - headers already sent (output started at /home/runner/work/idk/idk/test_quote_system.php:24) in /home/runner/work/idk/idk/quote/quote_intake_handler.php on line 53
+[24-Sep-2025 03:06:59 America/New_York] PHP Stack trace:
+[24-Sep-2025 03:06:59 America/New_York] PHP   1. {main}() /home/runner/work/idk/idk/test_quote_system.php:0
+[24-Sep-2025 03:06:59 America/New_York] PHP   2. require_once() /home/runner/work/idk/idk/test_quote_system.php:42
+[24-Sep-2025 03:06:59 America/New_York] PHP   3. http_response_code($response_code = 500) /home/runner/work/idk/idk/quote/quote_intake_handler.php:53
