@@ -19,10 +19,34 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-  run: |
-    echo "Running install (uses npm ci if lockfile exists, otherwise npm install)"
-    if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-      npm ci
-    else
-      npm install
-    fi
+        run: |
+          echo "Running install (uses npm ci if lockfile exists, otherwise npm install)"
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Lint
+        run: |
+          if npm run | grep -qE '^\s+lint\s'; then
+            npm run lint
+          else
+            echo "No npm 'lint' script — skipping."
+          fi
+
+      - name: Build
+        run: |
+          if npm run | grep -qE '^\s+build\s'; then
+            npm run build
+          else
+            echo "No npm 'build' script — skipping."
+          fi
+
+      - name: Deploy to Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npm i -g netlify-cli
+          npx netlify-cli deploy --dir=./dist --prod --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
