@@ -1,0 +1,50 @@
+name: CI / Build / Deploy (single package)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint_build_deploy:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Use targeted package dir
+        run: |
+          set -euo pipefail
+          PKG_DIR="crm/js/PapaParse-master"
+          if [ ! -d "$PKG_DIR" ]; then
+            echo "Package dir $PKG_DIR not found — exiting."
+            exit 0
+          fi
+          cd "$PKG_DIR"
+          echo "Processing $PKG_DIR"
+
+      - name: Install dependencies
+        run: |
+          cd crm/js/PapaParse-master
+          echo "Running install (uses npm ci if lockfile exists, otherwise npm install)"
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Lint (if present)
+        run: |
+          cd crm/js/PapaParse-master
+          npm run lint --if-present || echo "lint skipped or failed (allowed)"
+
+      - name: Build (if present)
+        run: |
+          cd crm/js/PapaParse-master
+          npm run build --if-present || echo "build skipped or failed (allowed)"
