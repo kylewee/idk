@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanic Saint Augustine - Auto Repair Services</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Mechanic Saint Augustine</h1>
+            <nav>
+                <ul>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#quote">Get Quote</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h2>Professional Auto Repair in Saint Augustine</h2>
+                <p>Trusted mechanics providing quality service for all your automotive needs</p>
+                <a href="#quote" class="cta-button">Get Instant Quote</a>
+            </div>
+        </section>
+
+        <section id="services" class="services">
+            <div class="container">
+                <h2>Our Services</h2>
+                <div class="service-grid">
+                    <div class="service-item">
+                        <h3>Oil Changes</h3>
+                        <p>Quick and professional oil change services</p>
+                    </div>
+                    <div class="service-item">
+                        <h3>Brake Repair</h3>
+                        <p>Complete brake system inspection and repair</p>
+                    </div>
+                    <div class="service-item">
+                        <h3>Engine Diagnostics</h3>
+                        <p>Advanced diagnostic tools to identify issues</p>
+                    </div>
+                    <div class="service-item">
+                        <h3>Transmission Service</h3>
+                        <p>Transmission repair and maintenance</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quote" class="quote-section">
+            <div class="container">
+                <h2>Get Your Instant Quote</h2>
+                <form id="quote-form" action="/quote/quote_intake_handler.php" method="POST">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicle_year">Vehicle Year *</label>
+                        <select id="vehicle_year" name="vehicle_year" required>
+                            <option value="">Select Year</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicle_make">Vehicle Make *</label>
+                        <input type="text" id="vehicle_make" name="vehicle_make" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicle_model">Vehicle Model *</label>
+                        <input type="text" id="vehicle_model" name="vehicle_model" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="service_type">Service Needed *</label>
+                        <select id="service_type" name="service_type" required>
+                            <option value="">Select Service</option>
+                            <option value="oil_change">Oil Change</option>
+                            <option value="brake_repair">Brake Repair</option>
+                            <option value="engine_diagnostics">Engine Diagnostics</option>
+                            <option value="transmission">Transmission Service</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Describe the Issue</label>
+                        <textarea id="description" name="description" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="preferred_time">Preferred Time Slot *</label>
+                        <div id="time-slot-picker" class="time-slot-picker">
+                            <!-- Time slots will be populated by JavaScript -->
+                        </div>
+                        <input type="hidden" id="preferred_time" name="preferred_time" required>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="sms_opt_in" name="sms_opt_in" value="1">
+                            I agree to receive SMS updates about my service appointment
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-button">Get Instant Quote</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+                <h2>About Us</h2>
+                <p>With over 20 years of experience serving the Saint Augustine community, we provide reliable, honest automotive repair services. Our certified mechanics use the latest diagnostic equipment to ensure your vehicle runs smoothly.</p>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Contact Us</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>Phone</h3>
+                        <p>(904) 555-0123</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Address</h3>
+                        <p>123 Main Street<br>Saint Augustine, FL 32084</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Hours</h3>
+                        <p>Mon-Fri: 8AM-6PM<br>Sat: 8AM-4PM<br>Sun: Closed</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Mechanic Saint Augustine. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

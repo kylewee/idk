@@ -1,0 +1,79 @@
+# Caddyfile for MechanicSaintAugustine.com
+# Serves static HTML/CSS and routes PHP requests to FastCGI
+
+mechanicsaintaugustine.com www.mechanicsaintaugustine.com {
+    # Document root
+    root * /var/www/mechanicsaintaugustine.com
+    
+    # Enable gzip compression
+    encode gzip
+    
+    # Security headers
+    header {
+        # Enable HSTS
+        Strict-Transport-Security max-age=31536000;
+        # Prevent MIME type sniffing
+        X-Content-Type-Options nosniff
+        # Enable XSS protection
+        X-XSS-Protection "1; mode=block"
+        # Prevent clickjacking
+        X-Frame-Options DENY
+        # Content Security Policy
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'"
+        # Remove server information
+        -Server
+    }
+    
+    # Handle PHP files with FastCGI
+    php_fastcgi unix//run/php/php8.2-fpm.sock {
+        index index.php
+    }
+    
+    # Serve static files
+    file_server
+    
+    # Custom error pages
+    handle_errors {
+        rewrite * /error.html
+        file_server
+    }
+    
+    # Logging
+    log {
+        output file /var/log/caddy/mechanicsaintaugustine.access.log
+        format json
+    }
+    
+    # Rate limiting for API endpoints
+    rate_limit {
+        zone quote_api {
+            key {remote_host}
+            events 10
+            window 1m
+        }
+        
+        match /quote/*
+        rate quote_api
+    }
+}
+
+# Development/local configuration (comment out for production)
+localhost:8080 {
+    root * .
+    
+    # Handle PHP files with local PHP-FPM
+    php_fastcgi localhost:9000
+    
+    # Serve static files
+    file_server
+    
+    # Enable detailed logging for development
+    log {
+        level DEBUG
+    }
+}
+
+# Redirect HTTP to HTTPS in production
+mechanicsaintaugustine.com:80 www.mechanicsaintaugustine.com:80 {
+    redir https://mechanicsaintaugustine.com{uri} permanent
+}
