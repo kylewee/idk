@@ -1,0 +1,144 @@
+<?php
+/**
+ * Этот файл является частью программы "CRM Руководитель" - конструктор CRM систем для бизнеса
+ * https://www.rukovoditel.net.ru/
+ * 
+ * CRM Руководитель - это свободное программное обеспечение, 
+ * распространяемое на условиях GNU GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
+ * 
+ * Автор и правообладатель программы: Харчишина Ольга Александровна (RU), Харчишин Сергей Васильевич (RU).
+ * Государственная регистрация программы для ЭВМ: 2023664624
+ * https://fips.ru/EGD/3b18c104-1db7-4f2d-83fb-2d38e1474ca3
+ */
+?>
+
+<?php echo ajax_modal_template_header(TEXT_INFO) ?>
+
+<?php echo form_tag('templates_form', url_for('ext/templates_docx/blocks', 'templates_id=' . _GET('templates_id') . '&action=save' . (isset($_GET['id']) ? '&id=' . $_GET['id'] : '')), array('class' => 'form-horizontal')) ?>
+
+<div class="modal-body">
+    <div class="form-body">
+
+<?php  
+    $choices = [
+        '' => TEXT_FIELD,
+        'table' => TEXT_TABLE . ' (' . TEXT_MYSQL_QUERY. ')',
+        'php' => TEXT_PHP_CODE,
+    ];
+?>        
+        <div class="form-group">
+            <label class="col-md-3 control-label" for="fields_id"><?php echo TEXT_TYPE ?></label>
+            <div class="col-md-9"><?php echo select_tag('extra_type', $choices,$obj['extra_type'], ['class' => 'form-control input-medium']) ?></div>			
+        </div>
+        
+        <div class="form-group" form_display_rules="extra_type:table,php">
+            <label class="col-md-3 control-label" for="notes"><?php echo TEXT_NOTE ?></label>
+            <div class="col-md-9"><?php echo textarea_tag('notes',$obj['notes'], ['class' => 'form-control textarea-small']) ?></div>			
+        </div>
+
+        <div class="form-group" form_display_rules="extra_type:">
+            <label class="col-md-3 control-label" for="fields_id"><?php echo TEXT_FIELD ?></label>
+            <div class="col-md-9"><?php echo select_tag('fields_id', export_templates_blocks::get_fields_choices($obj['fields_id'], $template_info['id'], $template_info['entities_id']), $obj['fields_id'], array('class' => 'form-control input-xlarge chosen-select required')) ?>
+            </div>			
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label" for="fields_id"><?php echo TEXT_SORT_ORDER ?></label>
+            <div class="col-md-9"><?php echo input_tag('sort_order', $obj['sort_order'], ['class' => 'form-control input-xsmall']) ?></div>			
+        </div>
+
+        <div id="block_settings"></div>
+
+
+
+    </div>
+</div> 
+
+<?php echo ajax_modal_template_footer() ?>
+
+</form> 
+
+<?php echo app_include_codemirror(['javascript','sql','php','clike','css','xml']) ?>
+
+<script>
+    $(function ()
+    {
+        $('#templates_form').validate({
+            submitHandler: function (form)
+            {
+                app_prepare_modal_action_loading(form)
+                return true;
+            }
+        });
+
+        block_settings();
+        extra_block_settings()
+
+        $('#fields_id').change(function ()
+        {
+            block_settings();
+        })
+        
+        $('#extra_type').change(function ()
+        {
+            extra_block_settings();
+        })
+
+    });
+
+
+    function block_settings()
+    {
+        extra_type = $('#extra_type').val();                
+        if(extra_type.length!=0)
+        {
+            return false;
+        }
+        
+        fields_id = $('#fields_id').val();
+
+        $('#block_settings').html('<div class="ajax-loading"></div>');
+
+        $('#block_settings').load('<?php echo url_for("ext/templates_docx/blocks_settings", 'templates_id=' . _GET('templates_id')) ?>', {fields_id: fields_id, id: '<?php echo $obj["id"] ?>'}, function (response, status, xhr)
+        {
+            if (status == "error")
+            {
+                $(this).html('<div class="alert alert-error"><b>Error:</b> ' + xhr.status + ' ' + xhr.statusText + '<div>' + response + '</div></div>')
+            }
+            else
+            {
+                appHandleUniform();
+
+                jQuery(window).resize();
+            }
+        });
+    }
+    
+    function extra_block_settings()
+    {
+        extra_type = $('#extra_type').val();
+        
+        //load default field settings
+        if(extra_type.length==0)
+        {
+            block_settings();
+            return false;
+        }
+
+        $('#block_settings').html('<div class="ajax-loading"></div>');
+
+        $('#block_settings').load('<?php echo url_for("ext/templates_docx/blocks_settings_extra", 'templates_id=' . _GET('templates_id')) ?>', {extra_type: extra_type, id: '<?php echo $obj["id"] ?>'}, function (response, status, xhr)
+        {
+            if (status == "error")
+            {
+                $(this).html('<div class="alert alert-error"><b>Error:</b> ' + xhr.status + ' ' + xhr.statusText + '<div>' + response + '</div></div>')
+            }
+            else
+            {
+                appHandleUniform();
+
+                jQuery(window).resize();
+            }
+        });
+    }
+</script>
