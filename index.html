@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>idk</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .status {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>idk</h1>
+    <p>Welcome to the idk project!</p>
+    
+    <div class="status">
+        <strong>✅ Deployment Status:</strong> This site is successfully deployed via Netlify using GitHub Actions!
+    </div>
+    
+    <h2>About This Deployment</h2>
+    <p>This site demonstrates the integration between GitHub Actions and Netlify using the following secrets:</p>
+    <ul>
+        <li><code>NETLIFY_AUTH_TOKEN</code> - Used to authenticate with Netlify API</li>
+        <li><code>NETLIFY_SITE_ID</code> - Identifies the specific Netlify site to deploy to</li>
+    </ul>
+    
+    <p>The deployment is automatically triggered when code is pushed to the main branch.</p>
+</body>
+</html>
