@@ -1,0 +1,12 @@
+localhost:8080 {
+	root * .
+	file_server browse
+
+	# Try files in order, fallback to index.html
+	try_files {path} {path}/ /index.html
+
+	# Log requests
+	log {
+		output file access.log
+	}
+}

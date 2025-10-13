@@ -4,3 +4,10 @@ dist/
 .env
 .vscode/
 <file>
+
+# Server binaries and logs
+caddy
+*.log
+*.tar.gz
+php-*/
+*.deb
