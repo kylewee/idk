@@ -25,6 +25,22 @@ function log_line(array $row): void {
   }
 }
 
+// Helper: determine current base URL (scheme + host) for building absolute links/callbacks
+function ci_base_url(): string {
+  $host = $_SERVER['HTTP_HOST'] ?? 'mechanicstaugustine.com';
+  $scheme = 'https';
+  if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+    $scheme = (string)$_SERVER['HTTP_X_FORWARDED_PROTO'];
+  } elseif (!empty($_SERVER['REQUEST_SCHEME'])) {
+    $scheme = (string)$_SERVER['REQUEST_SCHEME'];
+  } elseif (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    $scheme = 'https';
+  } else {
+    $scheme = 'http';
+  }
+  return $scheme . '://' . $host;
+}
+
 /**
  * Recursively search for transcript text in CI JSON payload
  */
@@ -121,6 +137,46 @@ if ($transcript === '' && $transcriptSid !== '') {
 
 $log['extracted_transcript'] = $transcript;
 
+// Try to extract additional insights if present in payload
+$insights = [];
+// summary
+if (isset($json['summary']) && is_string($json['summary']) && trim($json['summary']) !== '') {
+  $insights['summary'] = trim($json['summary']);
+} elseif (isset($json['insights']['summary']) && is_string($json['insights']['summary'])) {
+  $insights['summary'] = trim($json['insights']['summary']);
+} elseif (isset($json['conversation_summary']) && is_string($json['conversation_summary'])) {
+  $insights['summary'] = trim($json['conversation_summary']);
+}
+// sentiment
+if (isset($json['sentiment']) && is_string($json['sentiment'])) {
+  $insights['sentiment'] = trim($json['sentiment']);
+} elseif (isset($json['insights']['sentiment'])) {
+  $s = $json['insights']['sentiment'];
+  if (is_string($s)) { $insights['sentiment'] = trim($s); }
+  elseif (is_array($s) && isset($s['overall'])) { $insights['sentiment'] = (string)$s['overall']; }
+}
+// topics (array -> comma string)
+if (isset($json['topics']) && is_array($json['topics'])) {
+  $topics = array_filter(array_map(function($t){ return is_string($t) ? trim($t) : (is_array($t)&&isset($t['name'])?trim((string)$t['name']):''); }, $json['topics']));
+  if (!empty($topics)) $insights['topics'] = implode(', ', $topics);
+} elseif (isset($json['insights']['topics']) && is_array($json['insights']['topics'])) {
+  $topics = array_filter(array_map(function($t){ return is_string($t) ? trim($t) : (is_array($t)&&isset($t['name'])?trim((string)$t['name']):''); }, $json['insights']['topics']));
+  if (!empty($topics)) $insights['topics'] = implode(', ', $topics);
+}
+// action items (array -> bullets)
+if (isset($json['action_items']) && is_array($json['action_items'])) {
+  $items = array_filter(array_map(function($a){ return is_string($a) ? trim($a) : (is_array($a)&&isset($a['text'])?trim((string)$a['text']):''); }, $json['action_items']));
+  if (!empty($items)) $insights['action_items'] = implode("\n", $items);
+} elseif (isset($json['insights']['action_items']) && is_array($json['insights']['action_items'])) {
+  $items = array_filter(array_map(function($a){ return is_string($a) ? trim($a) : (is_array($a)&&isset($a['text'])?trim((string)$a['text']):''); }, $json['insights']['action_items']));
+  if (!empty($items)) $insights['action_items'] = implode("\n", $items);
+}
+// intent & urgency if present
+foreach (['intent','urgency'] as $k) {
+  if (isset($json[$k]) && is_string($json[$k]) && trim($json[$k]) !== '') $insights[$k] = trim($json[$k]);
+  elseif (isset($json['insights'][$k]) && is_string($json['insights'][$k])) $insights[$k] = trim($json['insights'][$k]);
+}
+
 // Prepare data for recording_callback.php
 $forwardData = [
   'TranscriptionText' => $transcript,
@@ -132,9 +188,11 @@ if (isset($json['from'])) $forwardData['From'] = $json['from'];
 if (isset($json['to'])) $forwardData['To'] = $json['to'];
 if (isset($json['recording_sid'])) $forwardData['RecordingSid'] = $json['recording_sid'];
 if ($transcriptSid) $forwardData['TranscriptSid'] = $transcriptSid;
+// Forward any extracted insights
+foreach ($insights as $k => $v) { $forwardData[$k] = $v; }
 
 // Forward to recording callback handler
-$callbackUrl = 'http://localhost' . dirname($_SERVER['REQUEST_URI']) . '/recording_callback.php';
+$callbackUrl = ci_base_url() . dirname($_SERVER['REQUEST_URI']) . '/recording_callback.php';
 $ch = curl_init($callbackUrl);
 curl_setopt_array($ch, [
   CURLOPT_POST => true,

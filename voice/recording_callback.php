@@ -686,6 +686,23 @@ function voice_log_event(string $event, array $data = []): void {
   @file_put_contents(__DIR__ . '/voice.log', $line, FILE_APPEND);
 }
 
+// Helper: determine current base URL (scheme + host) for building absolute links/callbacks
+function voice_base_url(): string {
+  $host = $_SERVER['HTTP_HOST'] ?? 'mechanicstaugustine.com';
+  $base = voice_base_url();
+  $scheme = 'https';
+  if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+    $scheme = (string)$_SERVER['HTTP_X_FORWARDED_PROTO'];
+  } elseif (!empty($_SERVER['REQUEST_SCHEME'])) {
+    $scheme = (string)$_SERVER['REQUEST_SCHEME'];
+  } elseif (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    $scheme = 'https';
+  } else {
+    $scheme = 'http';
+  }
+  return $scheme . '://' . $host;
+}
+
 // --- Access control helpers for recordings/download ---
 function recordings_basic_configured(): bool {
   return defined('VOICE_RECORDINGS_BASIC_USER') && VOICE_RECORDINGS_BASIC_USER !== ''
@@ -906,7 +923,7 @@ if ($__action === 'recordings') {
   echo '<table><thead><tr><th>When</th><th>From</th><th>To</th><th>Duration</th><th>Play</th><th>Link</th></tr></thead><tbody>';
   foreach ($rows as $r) {
     $sid = htmlspecialchars($r['sid'], ENT_QUOTES);
-    $link = 'https://' . $host . '/voice/recording_callback.php?action=download&sid=' . rawurlencode($sid);
+    $link = $base . '/voice/recording_callback.php?action=download&sid=' . rawurlencode($sid);
   if ($tokenCfg !== '' && !recordings_basic_configured() && !recordings_password_configured()) $link .= '&token=' . rawurlencode($tokenCfg);
     $ts = htmlspecialchars((string)$r['ts'], ENT_QUOTES);
     $from = htmlspecialchars((string)$r['from'], ENT_QUOTES);
@@ -937,7 +954,7 @@ if ($__action === 'recordings') {
     echo '<td>';
     echo '<a class="button" href="' . htmlspecialchars($link, ENT_QUOTES) . '&download=1">Download</a>';
     if (($nativeTranscriptEnabled || $whisperEnabled) && $transcriptRaw === '') {
-      $txUrl = 'https://' . $host . '/voice/recording_callback.php?action=transcribe&sid=' . rawurlencode($sid);
+      $txUrl = $base . '/voice/recording_callback.php?action=transcribe&sid=' . rawurlencode($sid);
       if ($tokenCfg !== '' && !recordings_basic_configured() && !recordings_password_configured()) $txUrl .= '&token=' . rawurlencode($tokenCfg);
       echo ' <a class="button" style="background:#059669" href="' . htmlspecialchars($txUrl, ENT_QUOTES) . '">Transcribe now</a>';
     }
@@ -976,7 +993,7 @@ if ($__action === 'transcribe') {
   header('Content-Type: text/html; charset=UTF-8');
   $sid = isset($_GET['sid']) ? preg_replace('/[^A-Za-z0-9]/', '', (string)$_GET['sid']) : '';
   $host = $_SERVER['HTTP_HOST'] ?? 'mechanicstaugustine.com';
-  $back = 'https://' . $host . '/voice/recording_callback.php?action=recordings';
+  $back = voice_base_url() . '/voice/recording_callback.php?action=recordings';
   $tokenCfg = defined('VOICE_RECORDINGS_TOKEN') ? (string)VOICE_RECORDINGS_TOKEN : '';
   if ($tokenCfg !== '' && !recordings_basic_configured() && !recordings_password_configured()) $back .= '&token=' . rawurlencode($tokenCfg);
 
@@ -1000,7 +1017,7 @@ if ($__action === 'transcribe') {
             'RecordingSid' => $sid,
             'CI_Source' => 'whisper_fallback'
           ];
-          $callbackUrl = 'http://localhost' . dirname($_SERVER['REQUEST_URI']) . '/recording_callback.php';
+          $callbackUrl = voice_base_url() . dirname($_SERVER['REQUEST_URI']) . '/recording_callback.php';
           $ch = curl_init($callbackUrl);
           curl_setopt_array($ch, [
             CURLOPT_POST => true,
@@ -1047,7 +1064,7 @@ if ($__action === 'transcribe') {
             'RecordingSid' => $sid,
             'CI_Source' => 'whisper_fallback'
           ];
-          $callbackUrl = 'http://localhost' . dirname($_SERVER['REQUEST_URI']) . '/recording_callback.php';
+          $callbackUrl = voice_base_url() . dirname($_SERVER['REQUEST_URI']) . '/recording_callback.php';
           $ch = curl_init($callbackUrl);
           curl_setopt_array($ch, [
             CURLOPT_POST => true,
@@ -1333,7 +1350,7 @@ if ($transcript) {
       $playableRecordingUrl = $recordingUrl;
       if (preg_match('/Recordings\/([^\/]+)$/', $recordingUrl, $matches)) {
         $recSid = $matches[1];
-  $playableRecordingUrl = "https://mechanicstaugustine.com/voice/recording_callback.php?action=download&sid=" . $recSid;
+        $playableRecordingUrl = voice_base_url() . "/voice/recording_callback.php?action=download&sid=" . $recSid;
       }
       $last4 = '';
       if ($from && preg_match('/(\d{4})$/', preg_replace('/[^\d\+]/', '', $from), $m4)) { $last4 = $m4[1]; }
@@ -1380,7 +1397,7 @@ if ($transcript) {
         $playableRecordingUrl = $recordingUrl;
         if (preg_match('/Recordings\/([^\/]+)$/', $recordingUrl, $matches)) {
           $recSid = $matches[1];
-          $playableRecordingUrl = "https://mechanicstaugustine.com/voice/recording_callback.php?action=download&sid=" . $recSid;
+          $playableRecordingUrl = voice_base_url() . "/voice/recording_callback.php?action=download&sid=" . $recSid;
         }
         $last4 = '';
         if ($from && preg_match('/(\d{4})$/', preg_replace('/[^\d\+]/', '', $from), $m4)) { $last4 = $m4[1]; }
@@ -1446,7 +1463,7 @@ if (($recordingUrl && $transcript) || (!$recordingUrl && $transcript)) {
   $playableRecordingUrl = $recordingUrl;
   if ($recordingUrl && preg_match('/Recordings\/([^\/]+)$/', $recordingUrl, $matches)) {
     $recordingSid = $matches[1];
-  $playableRecordingUrl = "https://mechanicstaugustine.com/voice/recording_callback.php?action=download&sid=" . $recordingSid;
+    $playableRecordingUrl = voice_base_url() . "/voice/recording_callback.php?action=download&sid=" . $recordingSid;
   }
   
   $leadData = [
@@ -1516,7 +1533,7 @@ if (($recordingUrl && $transcript) || (!$recordingUrl && $transcript)) {
       }
       $crmLink = '';
       if ($itemId && defined('CRM_LEADS_ENTITY_ID')) {
-        $crmLink = 'https://mechanicstaugustine.com/crm/index.php?module=items/items&path=' . (int)CRM_LEADS_ENTITY_ID . '&id=' . $itemId;
+        $crmLink = voice_base_url() . '/crm/index.php?module=items/items&path=' . (int)CRM_LEADS_ENTITY_ID . '&id=' . $itemId;
         $lines[] = 'Open in CRM: ' . $crmLink;
       }
       $body = implode("\n", $lines) . "\n";
@@ -1563,7 +1580,7 @@ if (($recordingUrl && $transcript) || (!$recordingUrl && $transcript)) {
     $playableRecordingUrl = $recordingUrl;
     if (preg_match('/Recordings\/([^\/]+)$/', $recordingUrl, $matches)) {
       $recSid = $matches[1];
-  $playableRecordingUrl = "https://mechanicstaugustine.com/voice/recording_callback.php?action=download&sid=" . $recSid;
+      $playableRecordingUrl = voice_base_url() . "/voice/recording_callback.php?action=download&sid=" . $recSid;
     }
 
     $last4 = '';

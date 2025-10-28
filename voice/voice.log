@@ -2190,3 +2190,8 @@
 {"ts":"2025-09-24T05:38:17+00:00","event":"download_ok","ip":"73.105.107.195","sid":"REdbf8ca98c241783dd88b56c10e20953b"}
 {"ts":"2025-09-24T05:38:17+00:00","event":"download_ok","ip":"73.105.107.195","sid":"RE8c2bb3c6fb50cc068de2a552aa587edb"}
 {"ts":"2025-09-24T05:38:17+00:00","event":"download_ok","ip":"73.105.107.195","sid":"REc6734d03cb8ad3a7350796f1a0bbc2db"}
+{"ts":"2025-10-27T09:59:01+00:00","ip":"127.0.0.1","event":"incoming_twiml","to":"+19046634789","from":null,"method":"GET"}
+{"ts":"2025-10-27T09:59:01+00:00","ip":"127.0.0.1","post":[],"summary":{"from":"","to":"","duration":0,"url":"","transcript":""},"debug_auto_transcribe":{"transcript_empty":true,"has_recording_sid":false,"openai_defined":true,"openai_value":"yes"},"skip_reason":"No transcript available"}
+{"ts":"2025-10-27T09:59:33+00:00","ip":"127.0.0.1","event":"incoming_twiml","to":"+19046634789","from":null,"method":"GET"}
+{"ts":"2025-10-27T09:59:42+00:00","ip":"127.0.0.1","post":[],"summary":{"from":"","to":"","duration":0,"url":"","transcript":""},"debug_auto_transcribe":{"transcript_empty":true,"has_recording_sid":false,"openai_defined":true,"openai_value":"yes"},"skip_reason":"No transcript available"}
+{"ts":"2025-10-28T03:34:37+00:00","ip":"127.0.0.1","event":"incoming_twiml","to":"+19046634789","from":null,"method":"GET"}

@@ -9,9 +9,21 @@ if (is_file($env)) {
 }
 
 $host = $_SERVER['HTTP_HOST'] ?? 'mechanicstaugustine.com';
-$callback = 'https://' . $host . '/voice/recording_callback.php';
-// Force personal phone for testing - config not loading properly
-$to = '+19046634789';
+// Determine scheme from proxy headers/environment to build proper absolute callbacks
+$scheme = 'https';
+if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+  $scheme = (string)$_SERVER['HTTP_X_FORWARDED_PROTO'];
+} elseif (!empty($_SERVER['REQUEST_SCHEME'])) {
+  $scheme = (string)$_SERVER['REQUEST_SCHEME'];
+} elseif (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+  $scheme = 'https';
+} else {
+  $scheme = 'http';
+}
+$base = $scheme . '://' . $host;
+$callback = $base . '/voice/recording_callback.php';
+// Destination number: prefer env, fallback to test number
+$to = defined('TWILIO_FORWARD_TO') && TWILIO_FORWARD_TO ? (string)TWILIO_FORWARD_TO : '+19046634789';
 $to = preg_replace('/[^0-9\+]/', '', $to);
 
 // Log webhook hit and dial target for diagnostics
@@ -38,8 +50,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
   <Pause length="1" />
   <Dial record="record-from-answer"
         answerOnBridge="true"
-        callerId="+19048349227"
-    action="<?=htmlspecialchars('https://' . $host . '/voice/recording_callback.php?action=dial', ENT_QUOTES)?>"
+      callerId="<?=htmlspecialchars((defined('TWILIO_CALLER_ID') && TWILIO_CALLER_ID) ? (string)TWILIO_CALLER_ID : '+19048349227', ENT_QUOTES)?>"
+    action="<?=htmlspecialchars($base . '/voice/recording_callback.php?action=dial', ENT_QUOTES)?>"
         method="POST"
         recordingStatusCallback="<?=htmlspecialchars($callback, ENT_QUOTES)?>"
         recordingStatusCallbackMethod="POST"

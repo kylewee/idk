@@ -11,3 +11,11 @@ caddy
 *.tar.gz
 php-*/
 *.deb
+
+# Local secrets and runtime artifacts
+api/.env.local.php
+.dev/
+voice/voice.log
+api/quote_intake.log
+tmp/
+crm/log/

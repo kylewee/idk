@@ -1713,15 +1713,47 @@ class api
 
     static function response_error($text, $error_code = '')
     {
-        $error_code = strlen($error_code) ? (int)$error_code : 500;
-        
-        http_response_code($error_code);
-        
+        // Normalize provided error code or key into a valid HTTP status code (int)
+        $status = 500; // default
+
+        if (is_int($error_code) || (is_string($error_code) && ctype_digit($error_code))) {
+            $status = (int)$error_code;
+        } elseif (is_string($error_code) && strlen($error_code)) {
+            // Map known string keys to HTTP status codes
+            switch ($error_code) {
+                case 'access_denied':
+                case 'account_not_active':
+                case 'ip_not_allowed':
+                    $status = 403;
+                    break;
+                case 'login_fail':
+                    $status = 401;
+                    break;
+                case 'not_found':
+                    $status = 404;
+                    break;
+                case 'email_exist':
+                    $status = 409;
+                    break;
+                default:
+                    $status = 400;
+                    break;
+            }
+        }
+
+        // Ensure we always pass an integer to http_response_code to avoid TypeError
+        http_response_code($status);
+
         $response = array(
             'status' => 'error',
-            'error_code' => $error_code,
+            // expose the numeric HTTP status; keep error_key if a string key was provided
+            'error_code' => $status,
             'error_message' => $text,
         );
+
+        if (is_string($error_code) && !ctype_digit($error_code) && strlen($error_code)) {
+            $response['error_key'] = $error_code;
+        }
 
         die(app_json_encode($response));
     }

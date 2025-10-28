@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    environment:
+      - DB_HOST=db
+      - DB_NAME=crm
+      - DB_USER=crm
+      - DB_PASS=crm
+      - DB_PORT=3306
+    volumes:
+      - ./:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - webnet
+
+  caddy:
+    image: caddy:2-alpine
+    depends_on:
+      - php
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./:/var/www/html:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - webnet
+
+  db:
+    image: mariadb:10.11
+    environment:
+      - MYSQL_DATABASE=crm
+      - MYSQL_USER=crm
+      - MYSQL_PASSWORD=crm
+      - MYSQL_ROOT_PASSWORD=devroot
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - webnet
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5
+    depends_on:
+      - db
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=crm
+      - PMA_PASSWORD=crm
+    ports:
+      - "8081:80"
+    networks:
+      - webnet
+
+volumes:
+  caddy_data:
+  caddy_config:
+  db_data:
+
+networks:
+  webnet:
+    driver: bridge
