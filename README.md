@@ -13,6 +13,7 @@ This is the starting point for the mobile mechanic service website.
 
 - **[Twilio & Cloudflare Integration Guide](docs/twilio_cloudflare_integration.md)** - Complete setup guide for phone number integration
 - **[Setup Checklist](docs/twilio_setup_checklist.md)** - Quick reference for configuration and troubleshooting
+- **[Architecture Diagram](docs/architecture_diagram.md)** - Visual representation of system components and data flow
 - **[Runbook](docs/runbook.md)** - Production deployment and maintenance procedures
 - **[Project Blueprint](docs/project_blueprint.md)** - Overall architecture and roadmap
 - **[Requirements](docs/requirements.md)** - Detailed functional requirements
