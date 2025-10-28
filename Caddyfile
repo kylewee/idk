@@ -1,5 +1,10 @@
-localhost:8080 {
-	root * .
+:80 {
+	root * /srv
+	
+	# Enable PHP processing
+	php_fastcgi php:9000
+	
+	# Serve static files
 	file_server browse
 
 	# Try files in order, fallback to index.html
@@ -7,6 +12,6 @@ localhost:8080 {
 
 	# Log requests
 	log {
-		output file access.log
+		output file /var/log/caddy/access.log
 	}
 }
