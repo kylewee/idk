@@ -5,13 +5,15 @@ const TWILIO_FORWARD_TO = '+19046634789';  // Your personal phone
 const TWILIO_ACCOUNT_SID = 'AC65690a662f4e1981b24e9a8bd51908e2';  // Your Twilio Account SID
 const TWILIO_AUTH_TOKEN = '68bac506884ee9a39838aef3c5bdff71';
 const TWILIO_SMS_FROM = '+19048349227';
+// Twilio phone number in E.164 format for webhook updates
+const TWILIO_PHONE_NUMBER = '+19048349227';
 const CRM_API_URL = 'https://mechanicstaugustine.com/crm/api/rest.php';
 const CRM_API_KEY = 'VMm87uzSFFyWAWCDzCXEK2AajBbHIOOIwtfhMWbA';
 
 // Set to your actual Leads Entity ID
 const CRM_LEADS_ENTITY_ID = 26;
 const CRM_USERNAME = 'kylewee2'; 
-const CRM_PASSWORD = 'NewPass123!';
+const CRM_PASSWORD = 'R0ckS0l!d';
 // Minimal mapping to get Leads created now with First/Last split.
 // We also map 'name' to First Name as a fallback so it "just works".
 const CRM_FIELD_MAP = [
