@@ -6,7 +6,7 @@ dist/
 <file>
 
 # Server binaries and logs
-caddy
+/caddy
 *.log
 *.tar.gz
 php-*/
