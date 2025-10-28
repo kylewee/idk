@@ -24,7 +24,7 @@ This is the starting point for the mobile mechanic service website.
 - Start stack: `docker compose -f docker-compose.yml up -d --build`
 - App: http://localhost:8080 • phpMyAdmin: http://localhost:8081 (host db / user crm / pass crm)
 - Probe: open / (index), /crm/health.php, /voice/incoming.php – expect 200s.
-- **Note**: Use `docker-compose.yml` explicitly as the repo contains multiple compose files
+- **Note**: Use `docker-compose.yml` explicitly (the `compose.yaml` file is for a different legacy build)
 
 ## Smoke tests (optional)
 
