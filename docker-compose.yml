@@ -1,0 +1,67 @@
+services:
+  db:
+    image: mariadb:10.11
+    container_name: idk-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mechanic
+      MYSQL_USER: mechanic
+      MYSQL_PASSWORD: mechanic
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - idk-network
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: idk-php
+    volumes:
+      - .:/var/www/html
+    networks:
+      - idk-network
+    depends_on:
+      - db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5
+    container_name: idk-phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8081:80"
+    networks:
+      - idk-network
+    depends_on:
+      - db
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: idk-caddy
+    ports:
+      - "8080:80"
+      - "8443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - .:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - idk-network
+    depends_on:
+      - php
+
+networks:
+  idk-network:
+    driver: bridge
+
+volumes:
+  db_data:
+  caddy_data:
+  caddy_config:
