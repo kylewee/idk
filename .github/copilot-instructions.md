@@ -7,7 +7,9 @@ This is a mobile mechanic service website built as a static HTML site with PHP b
 
 ### Core Components
 - **Frontend**: Static HTML (`index.html`) with embedded CSS/JS - no build process
-- **Quote System**: `api/quote_intake.php` + `quote/` directory for intake forms
+- **Quote System**: Two endpoints for different use cases:
+  - `api/quote_intake.php` - Original API endpoint for external integrations
+  - `quote/quote_intake_handler.php` - Enhanced handler with SMS support for web form
 - **Voice System**: `voice/` directory handling Twilio webhooks for call routing and recording
 - **CRM Integration**: Rukovoditel CRM in `crm/` directory with API endpoints
 - **Price Catalog**: `price-catalog.json` drives automated estimates with multipliers
@@ -35,10 +37,18 @@ CRM_FIELD_MAP              // Maps form fields to CRM field IDs
 
 ## Development Workflows
 
+### Local Development with Docker
+- **Docker Compose Stack**: `docker-compose.yml` defines 4 services (Caddy, PHP-FPM, MariaDB, phpMyAdmin)
+- **Quick Start**: `docker compose up -d` to start, access at http://localhost:8080
+- **Caddy Config**: `Caddyfile` routes PHP requests to `php:9000`, serves static files from `/srv`
+- **Database**: MariaDB on port 3306 (user: mechanic, password: mechanic)
+- **phpMyAdmin**: Available at http://localhost:8081 for database management
+
 ### Deployment
-- GitHub Actions CI/CD in `.github/workflows/` (targets `crm/js/PapaParse-master` for Node builds)
-- Static files deployed directly - no compilation step for main site
-- Use `setup_repo.sh` for repository initialization
+- **CI Workflow**: `.github/workflows/ci.yml` targets `crm/js/PapaParse-master` for Node builds/linting
+- **Deploy Workflow**: `.github/workflows/deploy.yml` deploys to Netlify (requires NETLIFY_AUTH_TOKEN/SITE_ID secrets)
+- **Static Site**: No compilation step for main HTML/PHP files - deployed as-is
+- **Repository Setup**: Use `setup_repo.sh` for initial git configuration and remote setup
 
 ### Testing Voice Integration
 - Twilio webhooks hit `voice/incoming.php` for call routing
@@ -72,14 +82,18 @@ $entry = ['ts' => date('c'), 'event' => 'description', 'data' => $data];
 ```
 
 ### Price Calculation
-- All repairs defined in `price-catalog.json` with base time/price
-- Multipliers applied for V8 engines (`"v8": 1.2`) and old cars (`"old_car": 1.1`)
-- Mobile service markup automatically applied in quote calculations
+- **Catalog**: All repairs defined in `price-catalog.json` with base time/price
+- **Multipliers**: Applied for V8 engines (`"v8": 1.2`) and old cars (`"old_car": 1.1`)
+- **Mobile Markup**: Automatically applied in quote calculations
+- **Estimate API**: `quote_intake.php` calls `http://127.0.0.1:8091/api/estimate` for price calculations
+- **Estimate Data**: Includes repair/service, year, make, model, engine, zip code
 
 ### SMS Integration
-- Quote forms support SMS opt-in via checkbox
-- SMS sent through Twilio using `TWILIO_SMS_FROM` number
-- Include STOP compliance language in all SMS messages
+- **Quote Forms**: Support SMS opt-in via checkbox (see `quote/SMS_SETUP.md`)
+- **Handler**: `quote/quote_intake_handler.php` processes SMS requests (distinct from `api/quote_intake.php`)
+- **Configuration**: Use `TWILIO_SMS_FROM` or `TWILIO_MESSAGING_SERVICE_SID` in `.env.local.php`
+- **Compliance**: Include STOP language in all SMS messages per regulations
+- **Appointment Slots**: Form generates time slots (skips Sundays), included in SMS body
 
 ## Integration Points
 
@@ -99,10 +113,12 @@ $entry = ['ts' => date('c'), 'event' => 'description', 'data' => $data];
 - No frontend build tools - vanilla HTML/CSS/JS only
 
 ## File Patterns
-- **Backups**: `.backup` and `.bak` suffixes for file versioning
-- **Config**: `.env.local.php` for environment-specific settings
-- **Logs**: `.log` files for debugging (voice.log, quote_intake.log)
+- **Backups**: `.backup` and `.bak` suffixes for file versioning (e.g., `index.html.backup-20240924`)
+- **Config**: `.env.local.php` for environment-specific settings (never commit - contains secrets)
+- **Logs**: `.log` files for debugging (voice.log, quote_intake.log) - JSON-formatted entries
 - **Workspaces**: Multiple `.code-workspace` files in `quote/` for different development phases
+- **Apache Config**: `backups/.htaccess` for web server configuration if not using Caddy
+- **No Build Artifacts**: Project has no root package.json - static HTML/CSS/JS served directly
 
 ## Testing & Debugging
 - Use log files for webhook debugging (`voice/voice.log`, `api/quote_intake.log`)
