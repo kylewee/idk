@@ -39,3 +39,35 @@ docker compose down -v
 - Website: http://localhost:8080
 - phpMyAdmin: http://localhost:8081
 - Database: localhost:3306 (user: mechanic, password: mechanic)
+
+## Cloud Mode
+
+Cloud mode enables production-ready logging and monitoring capabilities.
+
+### Logging
+
+The application includes a centralized logging system in the `log/` directory:
+
+- **chat.json**: Tracks all user interactions and conversations
+- **logger.php**: PHP utility class for structured logging
+
+### Usage Example
+
+```php
+require_once __DIR__ . '/log/logger.php';
+
+$logger = new Logger(__DIR__ . '/log');
+$logger->logChat('quote_request', [
+    'name' => 'Customer Name',
+    'phone' => '555-1234',
+    'service' => 'Oil Change'
+]);
+```
+
+### Log Management
+
+- Logs are automatically rotated to keep file sizes manageable (last 1000 entries)
+- Individual log files (*.log, *.txt) are excluded from git
+- The log directory structure is preserved via .gitkeep
+
+For more details, see [log/README.md](log/README.md)

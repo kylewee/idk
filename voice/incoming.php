@@ -8,6 +8,14 @@ if (is_file($env)) {
   require $env;
 }
 
+// Load cloud mode logger
+$loggerFile = __DIR__ . '/../log/logger.php';
+$cloudLogger = null;
+if (is_file($loggerFile)) {
+  require_once $loggerFile;
+  $cloudLogger = new Logger(__DIR__ . '/../log');
+}
+
 $host = $_SERVER['HTTP_HOST'] ?? 'mechanicstaugustine.com';
 $callback = 'https://' . $host . '/voice/recording_callback.php';
 // Force personal phone for testing - config not loading properly
@@ -26,6 +34,15 @@ try {
     'method' => $_SERVER['REQUEST_METHOD'] ?? null,
   ];
   @file_put_contents($logFile, json_encode($entry) . PHP_EOL, FILE_APPEND);
+  
+  // Log to cloud mode logger if available
+  if ($cloudLogger) {
+    $cloudLogger->logChat('incoming_call', [
+      'to' => $to,
+      'from' => $_POST['From'] ?? $_GET['From'] ?? null,
+      'ip' => $_SERVER['REMOTE_ADDR'] ?? null
+    ]);
+  }
 } catch (\Throwable $e) {
   // ignore logging errors
 }
