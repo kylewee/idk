@@ -115,9 +115,10 @@ class Logger {
                 return [];
             }
             
-            $entries = array_map(function($line) {
-                return json_decode($line, true);
-            }, $lines);
+            $entries = array_filter(array_map(function($line) {
+                $decoded = json_decode($line, true);
+                return $decoded !== null ? $decoded : false;
+            }, $lines));
             
             if ($limit > 0) {
                 return array_slice($entries, -$limit);
@@ -126,8 +127,3 @@ class Logger {
         }
     }
 }
-
-// Example usage:
-// $logger = new Logger(__DIR__);
-// $logger->logChat('quote_request', ['name' => 'John Doe', 'phone' => '555-1234']);
-// $logger->log('application.log', 'User logged in', ['user_id' => 123]);
