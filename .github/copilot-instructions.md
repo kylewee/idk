@@ -7,6 +7,7 @@ This is a mobile mechanic service website built as a static HTML site with PHP b
 
 ### Core Components
 - **Frontend**: Static HTML (`index.html`) with embedded CSS/JS - no build process
+- **Admin Interface**: `/admin` redirects to Rukovoditel CRM at `/crm/` - accessible via symlink and Caddyfile redirect
 - **Quote System**: Two endpoints for different use cases:
   - `api/quote_intake.php` - Original API endpoint for external integrations
   - `quote/quote_intake_handler.php` - Enhanced handler with SMS support for web form
@@ -40,7 +41,8 @@ CRM_FIELD_MAP              // Maps form fields to CRM field IDs
 ### Local Development with Docker
 - **Docker Compose Stack**: `docker-compose.yml` defines 4 services (Caddy, PHP-FPM, MariaDB, phpMyAdmin)
 - **Quick Start**: `docker compose up -d` to start, access at http://localhost:8080
-- **Caddy Config**: `Caddyfile` routes PHP requests to `php:9000`, serves static files from `/srv`
+- **Admin Access**: http://localhost:8080/admin redirects to CRM (http://localhost:8080/crm)
+- **Caddy Config**: `Caddyfile` routes PHP requests to `php:9000`, serves static files from `/srv`, includes `/admin` to `/crm` redirects
 - **Database**: MariaDB on port 3306 (user: mechanic, password: mechanic)
 - **phpMyAdmin**: Available at http://localhost:8081 for database management
 
