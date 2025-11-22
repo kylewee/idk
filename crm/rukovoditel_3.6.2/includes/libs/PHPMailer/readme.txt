@@ -1,1 +1,0 @@
-PHPMailer.php remove https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting

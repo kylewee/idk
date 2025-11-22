@@ -2,11 +2,8 @@
 declare(strict_types=1);
 header('Content-Type: text/xml');
 
-// Load shared config (CRM/Twilio values live here)
-$env = __DIR__ . '/../api/.env.local.php';
-if (is_file($env)) {
-  require $env;
-}
+// Load configuration
+require_once __DIR__ . '/../config/config.php';
 
 $host = $_SERVER['HTTP_HOST'] ?? 'mechanicstaugustine.com';
 $callback = 'https://' . $host . '/voice/recording_callback.php';

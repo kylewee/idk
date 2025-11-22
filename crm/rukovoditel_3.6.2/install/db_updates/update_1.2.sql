@@ -1,1 +1,0 @@
-ALTER TABLE `app_comments_history` CHANGE `fields_value` `fields_value` TEXT NULL;

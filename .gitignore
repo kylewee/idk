@@ -2,8 +2,18 @@ node_modules/
 dist/
 .build/
 .env
+.env.local
+.env.*.local
 .vscode/
 <file>
+
+# Sensitive configuration files
+api/.env.local.php
+api/.env.local.php.*
+*.backup
+*.backup-*
+*.bak
+*.bak.*
 
 # Server binaries and logs
 caddy
@@ -11,3 +21,15 @@ caddy
 *.tar.gz
 php-*/
 *.deb
+
+# Generated files
+vendor/
+composer.lock
+
+# CRM uploads and cache
+crm/uploads/
+crm/cache/
+
+# Test coverage
+coverage/
+.phpunit.result.cache

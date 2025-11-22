@@ -670,11 +670,8 @@ function crm_autodiscover_fields(): array {
   }
   return $out;
 }
-// Load env as early as possible for all routes (download/recordings/dial)
-$env = __DIR__ . '/../api/.env.local.php';
-if (is_file($env)) {
-  require $env;
-}
+// Load configuration as early as possible for all routes (download/recordings/dial)
+require_once __DIR__ . '/../config/config.php';
 
 // Inline router for auxiliary features so we don't depend on separate files
 $__action = $_GET['action'] ?? $_POST['action'] ?? '';

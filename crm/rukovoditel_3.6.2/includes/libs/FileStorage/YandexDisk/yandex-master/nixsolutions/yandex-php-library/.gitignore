@@ -1,7 +1,0 @@
-.DS_Store
-.idea
-vendor/*
-coverage
-composer.phar
-composer.lock
-.vagrant

@@ -5,11 +5,9 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Load CRM config if available
-$envFile = __DIR__ . '/../api/.env.local.php';
-if (is_file($envFile)) {
-    require $envFile;
-}
+// Load configuration
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../src/PricingService.php';
 
 /**
  * Convert the various opt-in values ("true", 1, "yes") into a boolean flag.
@@ -60,67 +58,44 @@ function qi_normalize_phone($value): ?string
 }
 
 /**
- * Quick local pricing matrix mirroring the public quote widget.
+ * Calculate pricing estimate using centralized PricingService.
+ * Replaces the old hardcoded pricing matrix.
  */
 function qi_local_estimate(array $lead): ?array
 {
     $repair = '';
     if (!empty($lead['repair'])) {
-        $repair = strtolower(trim((string)$lead['repair']));
+        $repair = trim((string)$lead['repair']);
     } elseif (!empty($lead['service'])) {
-        $repair = strtolower(trim((string)$lead['service']));
+        $repair = trim((string)$lead['service']);
     }
+
     if ($repair === '') {
         return null;
     }
-    $slug = preg_replace('/[^a-z0-9]+/', ' ', $repair);
-    $slug = trim($slug);
-    if ($slug === '') {
+
+    try {
+        $pricing = PricingService::getInstance();
+        $estimate = $pricing->calculateEstimateFromVehicle($repair, [
+            'year' => $lead['year'] ?? null,
+            'engine_size' => $lead['engine'] ?? null,
+        ]);
+
+        if (!$estimate) {
+            return null;
+        }
+
+        return [
+            'amount' => (float)$estimate['final_price'],
+            'source' => 'pricing_service',
+            'base_price' => $estimate['base_price'],
+            'multiplier' => $estimate['price_multiplier'],
+            'repair_key' => $estimate['repair'],
+        ];
+    } catch (Exception $e) {
+        error_log('Pricing calculation error: ' . $e->getMessage());
         return null;
     }
-    $aliases = [
-        'brake pads replacement' => 'brake pads',
-        'alternator replacement' => 'alternator',
-        'starter replacement' => 'starter',
-        'timing belt replacement' => 'timing belt',
-        'engine diagnostic' => 'check engine',
-        'check engine light' => 'check engine',
-        'battery' => 'battery replacement',
-    ];
-    if (isset($aliases[$slug])) {
-        $slug = $aliases[$slug];
-    }
-    $priceMap = [
-        'oil change' => 50,
-        'brake pads' => 150,
-        'battery replacement' => 120,
-        'alternator' => 350,
-        'starter' => 300,
-        'timing belt' => 500,
-        'ac recharge' => 180,
-        'check engine' => 80,
-    ];
-    if (!isset($priceMap[$slug])) {
-        return null;
-    }
-    $base = (float)$priceMap[$slug];
-    $multiplier = 1.0;
-    $engine = isset($lead['engine']) ? strtolower((string)$lead['engine']) : '';
-    if ($engine !== '' && strpos($engine, 'v8') !== false) {
-        $multiplier = 1.2;
-    }
-    $year = isset($lead['year']) ? (int)$lead['year'] : 0;
-    if ($year > 0 && $year < 2000) {
-        $multiplier += 0.1;
-    }
-    $amount = round($base * $multiplier);
-    return [
-        'amount' => (float)$amount,
-        'source' => 'local_matrix',
-        'base_price' => $base,
-        'multiplier' => $multiplier,
-        'repair_key' => $slug,
-    ];
 }
 
 /**

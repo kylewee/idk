@@ -1,5 +1,0 @@
-{
-    "require": {
-        "spatie/dropbox-api": "^1.21"
-    }
-}

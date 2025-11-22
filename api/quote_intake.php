@@ -5,11 +5,9 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Load CRM config if available
-$envFile = __DIR__ . '/.env.local.php';
-if (is_file($envFile)) {
-    require $envFile;
-}
+// Load configuration
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../src/PricingService.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -37,34 +35,18 @@ foreach ($required as $field) {
     }
 }
 
-// Extract repair/service info for estimate
-$estimate_payload = [
-    'repair' => $data['repair'] ?? '',
-    'service' => $data['service'] ?? '',
-    'year' => (int)($data['year'] ?? 0),
-    'make' => $data['make'] ?? '',
-    'model' => $data['model'] ?? '',
-    'engine' => $data['engine'] ?? '',
-    'zip' => $data['zip'] ?? ''
-];
-
-// Call internal estimate API
+// Calculate estimate using centralized pricing service
 $estimate_result = null;
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'http://127.0.0.1:8091/api/estimate');
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($estimate_payload));
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+$repair = $data['repair'] ?? $data['service'] ?? '';
 
-$estimate_response = curl_exec($ch);
-$estimate_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
-
-if ($estimate_response && $estimate_http_code === 200) {
-    $estimate_result = json_decode($estimate_response, true);
+if (!empty($repair)) {
+    $pricing = PricingService::getInstance();
+    $estimate_result = $pricing->getEstimateResponse($repair, [
+        'year' => (int)($data['year'] ?? 0),
+        'make' => $data['make'] ?? '',
+        'model' => $data['model'] ?? '',
+        'engine_size' => $data['engine'] ?? '',
+    ]);
 }
 
 // Log the quote request (structured for easy parsing)
