@@ -1,0 +1,42 @@
+{
+  "name": "mechanic-saint-augustine",
+  "version": "1.0.0",
+  "description": "Mobile mechanic service website with integrated CRM, quote management, and voice call handling",
+  "private": true,
+  "scripts": {
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
+    "docker:build": "docker-compose build",
+    "lint:js": "eslint *.js quote/*.js --fix",
+    "lint:php": "find . -name '*.php' -not -path './crm/*' -not -path './vendor/*' -exec php -l {} \\;",
+    "format": "prettier --write '**/*.{js,json,md,html,css}'",
+    "validate:json": "node -e \"require('./price-catalog.json'); console.log('✓ price-catalog.json is valid')\"",
+    "test": "npm run lint:js && npm run validate:json",
+    "dev": "npm run docker:up",
+    "logs": "npm run docker:logs"
+  },
+  "keywords": [
+    "mechanic",
+    "crm",
+    "quote-management",
+    "twilio",
+    "voice-calls",
+    "sms"
+  ],
+  "author": "Kyle Wee",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kylewee/idk.git"
+  }
+}

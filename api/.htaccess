@@ -1,0 +1,9 @@
+# Protect sensitive files
+<FilesMatch "\.(log|env\.php|bak|backup)$">
+    Require all denied
+</FilesMatch>
+
+# Deny access to hidden files
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

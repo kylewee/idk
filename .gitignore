@@ -1,13 +1,63 @@
+# Dependencies
 node_modules/
+vendor/
+
+# Build outputs
 dist/
 .build/
-.env
-.vscode/
-<file>
 
-# Server binaries and logs
-caddy
+# Environment files and secrets
+.env
+.env.local
+.env.*.local
+*.env.php
+api/.env.local.php
+
+# IDE and editor files
+.vscode/
+.idea/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+# Backup files
+*.backup
+*.backup-*
+*.bak
+*.bak.*
+*.old
+*.orig
+*~
+
+# Logs
 *.log
+logs/
+api/*.log
+voice/*.log
+
+# Server binaries and archives
+caddy
 *.tar.gz
+*.zip
 php-*/
 *.deb
+
+# CRM archives (already extracted)
+crm/rukovoditel_*.zip
+crm/rukovoditel_ext_*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Database dumps
+*.sql
+*.sql.gz
+backups/*.sql
