@@ -1,6 +1,10 @@
 :80 {
 	root * /srv
 	
+	# Redirect /admin to /crm for admin interface
+	redir /admin /crm/index.php permanent
+	redir /admin/* /crm{uri} permanent
+	
 	# Enable PHP processing
 	php_fastcgi php:9000
 	
