@@ -11,6 +11,14 @@ if (is_file($envFile)) {
     require $envFile;
 }
 
+// Load cloud mode logger
+$loggerFile = __DIR__ . '/../log/logger.php';
+$cloudLogger = null;
+if (is_file($loggerFile)) {
+    require_once $loggerFile;
+    $cloudLogger = new Logger(__DIR__ . '/../log');
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Method not allowed']);
@@ -88,6 +96,11 @@ $log_entry = [
 
 // Log to error_log (will go to PHP error log or syslog)
 error_log('QUOTE_INTAKE: ' . json_encode($log_entry));
+
+// Log to cloud mode logger if available
+if ($cloudLogger) {
+    $cloudLogger->logChat('quote_intake', $log_entry['data']);
+}
 
 // --- Create CRM Lead (if CRM config present) ---
 $crm_result = null;

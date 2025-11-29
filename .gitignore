@@ -11,3 +11,9 @@ caddy
 *.tar.gz
 php-*/
 *.deb
+
+# Log directory - keep structure but ignore log files
+log/*.log
+log/*.txt
+!log/.gitkeep
+!log/README.md
