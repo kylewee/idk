@@ -1,0 +1,41 @@
+:80 {
+	root * /var/www/html
+	
+	# Enable file browsing for debugging (optional, can be removed in production)
+	file_server browse
+	
+	# PHP-FPM handling for .php files
+	php_fastcgi php:9000 {
+		env DB_HOST {env.DB_HOST}
+		env DB_NAME {env.DB_NAME}
+		env DB_USER {env.DB_USER}
+		env DB_PASS {env.DB_PASS}
+		env DB_PORT {env.DB_PORT}
+	}
+	
+	# Try files in order: exact path, PHP script, then fallback to index.html for SPA
+	@notPhp {
+		not path *.php
+		file {
+			try_files {path} {path}/ /index.html
+		}
+	}
+	handle @notPhp {
+		file_server
+	}
+	
+	# Log requests
+	log {
+		output file /var/log/caddy/access.log
+	}
+	
+	# Security headers
+	header {
+		# Remove Server header
+		-Server
+		# Enable XSS protection
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		X-XSS-Protection "1; mode=block"
+	}
+}
