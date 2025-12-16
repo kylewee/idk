@@ -1,0 +1,3 @@
+# Deny direct access to library files
+# These should only be included by other PHP scripts
+Require all denied
